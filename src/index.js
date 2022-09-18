@@ -4,77 +4,79 @@ import * as ReactDOM from 'react-dom';
 // gets the "root" DOM element from index.html and passes it to createRoot()
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const element = <h1>Hello, World</h1>;
-root.render(element);
-
-function tick() {
-  const element = (
-    <div>
-      <h1>hello, world!</h1>
-      <h2>It is {new Date().toLocaleTimeString()}.</h2>
-    </div>
-  );
-  root.render(element);
-}
-
-setInterval(tick, 1000);
-//root.render() is called every second from the setInterval() callback
-
-// This is just for practice to mess around with rendering elements. In most react applications there is just one root.render and React apps only call root.render() once. This is done by how code is encapsulated into stateful components later.
-
-// remember there needs to be a parent element so when createElement() is used there is only one arguement for the type value
-const elementTwo = (
+// this is a React element
+const infoOne = (
   <div>
-    <h1>React only updates what is necessary</h1>
+    <p>This is a valid React component</p>
+    <code>{'function Welcome(props) { return <h1>Hello, {props}</h1>; }'}</code>
+    <ol>
+      <li>This function accepts a single "prop" object argument</li>
+      <li>This function returns a React element</li>
+    </ol>
     <p>
-      React DOM compares the elements and its children to the previous elemenet
-      that was rendered and only updates what is nescessary. Can inspect element
-      to on the ticking clock to see. Only the text node whose content has
-      changed gets updated, meaning the div and the header containing hello
-      world are not updated. This is what makes React apps fast
-    </p>
-    <p>
-      from React "thinking how the UI should look at any given moment, rather
-      than how to change it over time, eliminates a whole class of bugs
+      <a href="https://reactjs.org/docs/react-component.html">
+        Detailed component API reference
+      </a>
     </p>
   </div>
 );
 
-// This is the basic render of a React element from the React Main Concepts docs, before components are introduced. StackBliz starts with more boiler template than needed to learn these concepts
-// https://reactjs.org/docs/rendering-elements.html
+// this is a React component
+function Welcome(props) {
+  return <h1>Hello, {props.name}</h1>;
+}
 
-//elements are the smallest building blocks of React
-// elements describe what to see on the screen
+// this is also a React component, using an ES6 class
+class WelcomeTwo extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}</h1>;
+  }
+}
+// Welcome and WelcomeTwo are two components and considered the same from React's point of view.
 
-// this is a React element
-// const element = <h1>Hello, world.</h1>;
+// --------------------
 
-// React elements are plain objects, because of the way Babel complies JSX down to React.createElement() calls to make this basically:
+// So far React elements have only represented DOM tags
+const element = <div />;
 
-// const elementTwo = React.createElement('h1', 'Hello, World.');
+// But elements can also represent user-defined components. Components that user's like you make.
+const elementTwo = <Welcome name="Sara" />;
+// When React sees an element representing a user-defined component, React will pass JSX attributes and children to this component as a single object --- this object is called "props"
 
-// const elementOne = {
-//   type: 'h1',
-//   props: {
-//     children: 'Hello, world.',
-//   },
-// };
-// get an error when trying to render this, what is that error?
+//for example,
+// root.render(elementTwo)
+// capital case represents a component and has to do with JSX in depth
 
-// <div>
-//   {element}
-//   {elementTwo}
+//COMPOSING COMPONENTS
+// components can refer to other components in their output. This alows component abstraction.
+// ex can use the welcome component many times for different names
 
-//   <p>
-//     React DOM takes care of updating the browser DOM to match React elements
-//   </p>
-//   <p>
-//     React elements are what react components are made of. They are not the
-//     same
-//   </p>
+function App() {
+  return (
+    <div>
+      <Welcome name="Sara" />
+      <Welcome name="Cahal" />
+      <Welcome name="Edite" />
+    </div>
+  );
+}
+//root.render(App())
 
-//   <p>
-//     React elements are immutable. To update the DOM you have to create a new
-//     element and pass it to root.render()
-//   </p>
-// </div>
+//PROPS ARE READ ONLY
+// a component must never modify its own props
+
+// this is good, it is "pure" because the function does not attempt to change the inputs and always returns the same result for the same inputs
+function sum(a, b) {
+  return a + b;
+}
+
+// this is bad, it is "impure" because this function changes its own input
+// account has now been altered.
+function withdraw(account, amount) {
+  account.total -= amount;
+}
+
+// This is a strict rule
+// all react components must act like pure functions with respect to their props
+
+root.render(App());
