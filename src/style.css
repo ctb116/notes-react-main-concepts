@@ -1,0 +1,12 @@
+body {
+  width: 80%;
+  margin: 0 auto;
+}
+
+code {
+  display: block;
+  white-space: pre-wrap;
+  font-family: 'Lucida Console', 'Courier New', monospace;
+  color: white;
+  font-size: 12px;
+}
