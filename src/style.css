@@ -8,5 +8,6 @@ code {
   white-space: pre-wrap;
   font-family: 'Lucida Console', 'Courier New', monospace;
   color: white;
+  background: rgb(32, 32, 32);
   font-size: 12px;
 }

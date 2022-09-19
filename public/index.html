@@ -1,4 +1,23 @@
-<h1>React Components and Props</h1>
+<h1>State in React</h1>
+<div>
+  <p>
+    React is a very flexiable library, but in the last lesson on "React
+    Components and Props", we ended on that React has a single strict rule:
+  </p>
+  <p>
+    All React components must act like pure functions with respect to their
+    props.
+  </p>
+  <code> function withdraw(account, amount) { account.total -= amount; } </code>
+  <p>There was this function we looked at that is considered unpure.</p>
+  <p>If this were a valid react component it would look like this:</p>
+  <code>
+    function withdraw(props) 
+    { props.account.total -= props.amount; }
+  </code>
+</div>
+
 <div id="root"></div>
+<div id="boot"></div>
 <!-- this is the "root" DOM node because everything inside it is managed by React DOM -->
 <!-- can have as many as you like but typically there is just one -->

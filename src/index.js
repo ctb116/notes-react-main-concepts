@@ -4,13 +4,64 @@ import './style.css';
 
 // gets the "root" DOM element from index.html and passes it to createRoot()
 const root = ReactDOM.createRoot(document.getElementById('root'));
+const rootTwo = ReactDOM.createRoot(document.getElementById('boot'));
 
 // -------------------------------------------------------
 
 // pt1 - COMPONENTS
 
+// React is very flexiable but in the last lesson we ended talking about React's single strict rule: All React components must act like pure functions with respect to their props!!
+
+//There was this function though that is considered unpure:
+
+function withdraw(account, amount) {
+  account.total -= amount;
+}
+
+// If this were a valid react component it would look like this:
+
+function withdrawTwo(props) {
+  props.account.total -= props.amount;
+}
+
+// but this is a totally normal thing to want to do. So what the heck?
+
+// convert function to a class instead. this is defined as a class (an ES6 class) instead of a function
+//Not going to cover everything in this right now - it is just what is needed to make a class component at the moment..or go with bare bones class
+
+//pretend user Input
+const amount = 25;
+
+class Bank extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      account: 50,
+    };
+  }
+
+  render() {
+    return (
+      <div>
+        <p>Amount is now {(this.state.account -= amount)}</p>
+      </div>
+    );
+  }
+}
+
+//This is a lot, take a moment to talk about what looks familar and what makes sense vs what is new and makes no sense. We are gonna go through it step by step
+
+//NOTES ABOUT THE CONSTRUCTOR
+// we pass props in because otherwise "props" alone would be undefined. However, it is considered bad practice to pass props into a constructor. There is no reason given https://stackoverflow.com/questions/30571875/whats-the-difference-between-super-and-superprops-in-react-when-using-e Remember coding is all made up by people in small rooms.
+
+// In our apps we are going to stick to constructor(props) and stuff because for now that is what the offical React documentation does and we don't want our resources to conflict with their resources.
+// Give an example what a class component could look like
+
+// This will likely get people mad because 25 now represents the amount and it is not clear where that number comes from
+
 const infoPt1 = (
   <div>
+    <h2></h2>
     <p>This is a React component:</p>
     <code>
       {`
@@ -36,170 +87,6 @@ const infoPt1 = (
   </div>
 );
 
-// pt2 - PROPS
-
-const infoPt2 = (
-  <div>
-    <p>A "prop" is just an object. React decided to call it a "prop"</p>
-    <code>
-      {`
-        let prop = {};
-      `}
-    </code>
-    <p>
-      "prop" stands for "properties" It contains information passed as an
-      arguement to a React component. Basically a React component is a valid
-      component if it accepts an object (aka, a "prop") as an arguement.
-    </p>
-    <code>
-      {`
-        prop = {
-          author: {avatarURL: "url", name: "Katie"}
-          text: "string"
-          date: date object
-        }
-      `}
-    </code>
-    <ul>
-      <li>prop.avatarURL = "url"</li>
-      <li>prop.text = "string"</li>
-      <li>prop.date = date object</li>
-    </ul>
-  </div>
-);
-
-// pt3 - Rendering a Component
-
-// So far React elements have only represented DOM tags
-const element = <div />;
-
-const infoPt3 = (
-  <div>
-    <p>So far we have only seen React elements made up of DOM tags</p>
-    <code>
-      {`
-        // this is a React element
-        const element = <h1>Hello, World!</h1>
-      `}
-    </code>
-    <p>But React elements can also represent custom-made components.</p>
-    <code>
-      {`
-        // this is a React element with a React component
-        const element = <Welcome name="Sara" />
-      `}
-    </code>
-    <p>
-      When React sees an element representing a custom-made component, React
-      will pass JSX attributes and children to this component as a single
-      object. React calls this object a "prop"
-    </p>
-    <p>For example:</p>
-    <p>This is a custom-made React component:</p>
-    <code>
-      {`
-        function Welcome(props) {
-          return <h1>Hello, {props.name}</h1>;
-        }
-      `}
-    </code>
-    <p>This is a React element that contains the component above</p>
-    <code>
-      {`
-          const element = <Welcome name="Sara" />;
-        `}
-    </code>
-    <p>What the props object looks like:</p>
-    <code>
-      {`
-        props = {
-          name: "Sara"
-        }
-      `}
-    </code>
-    <p>
-      {' '}
-      This custom-made component accepts a prop object as an arguement. What
-      does props.name evaluate to? What should be rendered on the page after
-      looking at the code below?
-    </p>
-    <code>
-      {`
-        function Welcome(props) {
-          return <h1>Hello, {props.name}</h1>;
-        }
-      `}
-    </code>
-    <p>Lowercase represents a DOM tag. Uppercase represents a component</p>
-  </div>
-);
-
-// pt4 - COMPOSING COMPONENTS
-
-const infoPt4 = (
-  <div>
-    <h2>Composing Components</h2>
-    <p>
-      Components can refer to other components in their output. Components can
-      be reused with different prop arguements. This allows component
-      abstraction.
-    </p>
-    <code>
-      {`
-        function App() {
-          return (
-            <div>
-              <Welcome name="Sara" />
-              <Welcome name="Cahal" />
-              <Welcome name="Edite" />
-            </div>
-          );
-        }
-      `}
-    </code>
-    <p>
-      Try this: type the function above in index.js file. Update root.render to
-      be root.render(App())
-    </p>
-  </div>
-);
-
-// pt5 - PROPS ARE READ ONLY
-
-const infoPt5 = (
-  <div>
-    <h2>Props are Read Only</h2>
-    <p>A component must never modify its own props.</p>
-    <p>
-      this is good, it is "pure" because the function does not attempt to change
-      the inputs and always returns the same result for the same inputs
-    </p>
-    <code>
-      {`
-        function sum(a, b) {
-          return a + b;
-        }
-      `}
-    </code>
-    <p>
-      {' '}
-      this is bad, it is "impure" because this function changes its own input.
-      account has now been altered.
-    </p>
-    <code>
-      {`
-        function withdraw(account, amount) {
-          account.total -= amount;
-        }
-      `}
-    </code>
-    <p>
-      This is a very strict rule in React. All React components must act like
-      pure functions with respect to their props.
-    </p>
-  </div>
-);
-
 // -------------------------------------------------------
 
 // infoPt1 = pt1 - COMPONENTS
@@ -211,13 +98,5 @@ const infoPt5 = (
 // Replace the arguement in root.render to see each section.
 // Try code below and remember to pass it to root.render()
 
-root.render(infoPt5);
-
-// this is also a React component, using an ES6 class
-// Talk about this in State and Lifecyle
-class WelcomeTwo extends React.Component {
-  render() {
-    return <h1>Hello, {this.props.name}</h1>;
-  }
-}
-// Welcome and WelcomeTwo are two components and considered the same from React's point of view.
+root.render(<Bank />);
+rootTwo.render(<Bank />);
