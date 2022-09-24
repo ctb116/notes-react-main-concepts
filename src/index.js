@@ -108,7 +108,7 @@ class BankTwo extends React.Component {
   render() {
     return (
       <div>
-        <p>Amount is now {(this.state.account -= amount)}</p>
+        <p>Amount is now {this.state.date.toLocaleTimeString()}</p>
       </div>
     );
   }
@@ -154,4 +154,75 @@ const infoPt1 = (
 // Try code below and remember to pass it to root.render()
 
 root.render(<Bank />);
-rootTwo.render(<Bank />);
+rootTwo.render(<BankTwo />);
+// When a component is passed  to root.render(), React calls the constructor of the component.
+// this.state in the constructor is initalized with an object with the current time
+// React then calls the render() method. This is how React learns what should be displayed on the screen. React updates the DOM to match the Clock's render output.
+// When the component is inserted into the DOM, React called componentDidMount()
+// While the component is mounted, the browser calls tick() which the component updates the UI by called setState(). setState() call tells React the state has changed and the render() method should be called again to learn what shold be on the screen. React will update the DOM with the correct time. This cycle is happening every second.
+// When the clock component is removed from the DOM, the componentWillUnmount() lifecycle method is called so the timer is stopped.
+
+
+// Use the account example for explaining state in one branch
+// use the timer example for explaining lifecycle in another branch
+
+// RULES FOR USING STATE CORRECTLY
+// DO NOT
+        // this.state.comment = "hello"
+        // this does not re-render the component because setState() is what tells React the state has changed and to call th render() method again.
+// this.state can only be assigned in the constructor.
+
+// STATE Updates may be Asyncronous
+// React may batch multiple setState() calls into a single update performance
+// this.props and this.state may be updated asynchronously so you should not rely on their values for calculating the next state.
+        // Ex, this is wrong and MAY lead to errors on the next update.
+        // Wrong
+        // this.setState({
+        //   counter: this.state.counter + this.props.increment,
+        // });
+
+        // to FIX:
+        // use setState() in where it cappets a function rather than an object arguement. That function will receive the previous state as the first arguement, and the props at the time the update is applied as the second arguement.
+
+        // arrow function
+        // this.setState((state, props) => ({
+        //   counter: state.counter + props.increment
+        // }));
+
+        // normal function that is the same
+        // this.setState(function(state, props) {
+        //   return {
+        //     counter: state.counter + props.increment
+        //   };
+        // });
+
+          // state is already updated in this second example so no room for errors.
+
+// STATE UPDATES ARE MERGED
+        // when you call setState(), React merges the object you provide into the current state.
+        // If you have several properties in your state
+        // The merging is shallow, so this.setState({comments}) leaves this.state.posts intact, but completely replaces this.state.comments.
+
+// DATA FLOWS DOWN   ---- will need to set up a react component with APP.js to have parent and child component
+// parent or child component can know if a certain component is stateful or stateless and they shouldn't care if another component is defined as a function or a class.
+
+// State is local or encapsulated and is not accessible to any component other than the one that owns and sets it
+
+// a component may choose to pass its state down as props to its child components
+// <FormattedDate date={this.state.date}/>
+// FormattedDate would recieve the date in its props and it wouldn't care where it came from.
+// remember props is just an object.
+// function FormattedDate(props) {
+        // return <h2> It is {props.date.toLocalTimeString()}/<h2>
+// }
+
+// this is also known as "top-down" or "unidirectional" date flow
+        // state is owned by some specific component 
+        // any data from a state can only affect components "below them in the tree"
+
+// example set up the <Clock/> component three times to show they are all their own thing and don't know anything about the outside world
+
+// you can have many stateful components in a React app and in the component tree it is a waterfall of props. components can connect at any point but data still flows down.
+
+// Remember in React wether a component is stateful or stateless is considered an implementation detail of the component that may change over time. Remember React does not have an opinion about things so designing your App is up to you. Unlike C# that really did care all the time.
+
